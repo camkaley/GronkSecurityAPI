@@ -1,6 +1,7 @@
 const cors = require('cors');
 const JSONdb = require('simple-json-db');
 const db = new JSONdb('./db/database.json');
+const { exec } = require("child_process");
 var express = require("express");
 var app = express();
 
@@ -24,4 +25,19 @@ app.get("/increment", (req, res, next) => {
   res.sendStatus(200)
 });
 
+app.get("/restart", (req, res, next) => {
+  exec("pm2 stop warbot", (error, stdout, stderr) => {
+    if (error || stderr) {
+        res.sendStatus(500)
+    }
+
+    res.json(stdout)
+    // exec("pm2 start warbot", (e, stdo, stde) => {
+    //   if(e || stde){
+    //     res.sendStatus(500)
+    //   }
+    //   res.json({stop: stdout, start: stdo})
+    // })
+});
+});
 
